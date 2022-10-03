@@ -3,9 +3,6 @@ import {useEffect, useState} from "react";
 import './App.css';
 import axios from 'axios';
 
-/*
-http://localhost:3000/#access_token=BQD0LuS8PrElDkHlCWoH7dLRqzuaEMCOHWbjch4UtyF8_1APdIOMCib4tfkbDlBaszIMSn7ggDtbQzg-Ddy7wSx33aV2qkp-dAKCFtQA5lgVmF_d_ufThJ0IC7HMG9lfzhxoB8g3VPEGpQ9s49F-0m_w3pNt0McokCipWJCQkHhqnYM&token_type=Bearer&expires_in=3600
-*/
 
 dotenv.config()
 
