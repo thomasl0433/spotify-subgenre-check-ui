@@ -1,12 +1,9 @@
-import * as dotenv from 'dotenv'
 import {useEffect, useState} from "react";
 import './App.css';
 import axios from 'axios';
 
-
-dotenv.config()
-
 function App() {
+
   const CLIENT_ID = process.env.CLIENT_ID;
   const REDIRECT_URI = "http://localhost:3000";
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
