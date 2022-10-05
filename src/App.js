@@ -9,7 +9,8 @@ HC_more(Highcharts) //init module
 
 function App() {
   const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
-  const REDIRECT_URI = "http://localhost:3000";
+  const REDIRECT_URI = "https://spotify-subgenre.vercel.app"
+  // const REDIRECT_URI = "http://localhost:3000";
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
   const RESPONSE_TYPE = "token";
 
