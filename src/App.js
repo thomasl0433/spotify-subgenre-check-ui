@@ -1,10 +1,14 @@
 import {useEffect, useState} from "react";
 import './App.css';
 import axios from 'axios';
+import Highcharts from 'highcharts/';
+import HighchartsReact from 'highcharts-react-official';
+import HC_more from 'highcharts/highcharts-more' //module
+HC_more(Highcharts) //init module
+
 
 function App() {
-
-  const CLIENT_ID = process.env.CLIENT_ID;
+  const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
   const REDIRECT_URI = "http://localhost:3000";
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
   const RESPONSE_TYPE = "token";
@@ -12,6 +16,50 @@ function App() {
   const [token, setToken] = useState("");
   const [searchKey, setSearchKey] = useState("");
   const [artists, setArtists] = useState([]);
+  const [topArtists, setTopArtists] = useState([]);
+  const [subgenreData, setSubgenreData] = useState([]);
+
+  const options = {
+    chart: {
+      type: 'packedbubble',
+      height: '100%'
+    },
+    title: {
+      text: 'Top Listening Subgenres'
+    },
+    tooltip: {
+      useHTML: true,
+      pointFormat: '<b>{point.name}:</b> {point.y}</sub>'
+    },
+    series: [
+      {
+        name: "Subgenre",
+        data: subgenreData,
+        // [
+        //   /* e.g.
+        //   {
+        //     name: "Rap",
+        //     value: 50
+        //   }
+        //   */
+        // ],
+        showInLegend: false
+      }
+    ],
+    credits: {
+      enabled: false
+    },
+    plotOptions: {
+      packedbubble: {
+        minSize: '30%',
+        maxSize: '170%',
+        dataLabels: {
+          enabled: true,
+          format: '{point.name}'
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -23,7 +71,7 @@ function App() {
       window.location.hash = "";
       window.localStorage.setItem("token", token);
     }
-    setToken(token)
+    setToken(token);
   }, [])
 
   const logout = () => {
@@ -42,6 +90,7 @@ function App() {
         type: "artist"
       }
     })
+    
 
     console.log(data);
     setArtists(data.artists.items);
@@ -56,24 +105,82 @@ function App() {
     })
   }
 
+  const populateSubgenreData = (dataList) => {
+    const genreList = [];
+    const output = {};
+    const outputList = [];
+
+    // iterate through list of top artists
+    for (let i = 0; i < dataList.length; i++) {
+      // iterate through each genre per artist
+      for (let j = 0; j < dataList[i].genres.length; j++) {
+        genreList.push(dataList[i].genres[j]);
+      }
+    }
+
+    for (const genre of genreList) {
+      output[genre] = output[genre] ? output[genre] + 1 : 1;
+    }
+
+    //console.log(output)
+    for (const [key, value] of Object.entries(output)) {
+      outputList.push({
+        name: key,
+        value: value
+      });
+    }
+    console.log(outputList)
+    setSubgenreData(outputList)
+  }
+
+  const getTopArtists = async (e) => {
+    e.preventDefault();
+    console.log("In top artists")
+    const {data} = await axios.get("https://api.spotify.com/v1/me/top/artists", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    console.log(data);
+    setTopArtists(data.items);
+    populateSubgenreData(data.items)
+  }
+
+  const renderTopArtists = () => {
+    return topArtists.map(artist => {
+      return <div key={artist.id}>
+        {artist.name}
+      </div>
+    })
+  }
+
   return (
     <div className="App">
       <header className="App-header">
         <h1>Spotify React</h1>
         {!token ? 
-        <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>Login to Spotify</a> 
+        <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=user-top-read`}>Login to Spotify</a> 
           : <button onClick={logout}>Logout</button>
         }
 
-        {token ?
+        {/* {token ?
           <form onSubmit={searchArtists}>
             <input type="text" onChange={e => setSearchKey(e.target.value)}/>
             <button type={"submit"}>Search</button>
           </form>
           : <h2>Please login</h2>
+        } */}
+
+        { token ? 
+            <form onSubmit={getTopArtists}>
+              <button type={"submit"}>Get top artists</button>
+            </form>
+          : <h2>Please login to use spotify features</h2>
         }
 
+        {/* {renderTopArtists()} */}
         {renderArtists()}
+        <HighchartsReact highcharts={Highcharts} options={options} />
         
       </header>
     </div>
