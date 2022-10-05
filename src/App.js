@@ -31,21 +31,7 @@ function App() {
       useHTML: true,
       pointFormat: '<b>{point.name}:</b> {point.y}</sub>'
     },
-    series: [
-      {
-        name: "Subgenre",
-        data: subgenreData,
-        // [
-        //   /* e.g.
-        //   {
-        //     name: "Rap",
-        //     value: 50
-        //   }
-        //   */
-        // ],
-        showInLegend: false
-      }
-    ],
+    series: subgenreData,
     credits: {
       enabled: false
     },
@@ -92,7 +78,7 @@ function App() {
     })
     
 
-    console.log(data);
+    //console.log(data);
     setArtists(data.artists.items);
   }
 
@@ -107,7 +93,7 @@ function App() {
 
   const populateSubgenreData = (dataList) => {
     const genreList = [];
-    const output = {};
+    const counts = {};
     const outputList = [];
 
     // iterate through list of top artists
@@ -119,29 +105,35 @@ function App() {
     }
 
     for (const genre of genreList) {
-      output[genre] = output[genre] ? output[genre] + 1 : 1;
+      counts[genre] = counts[genre] ? counts[genre] + 1 : 1;
     }
 
     //console.log(output)
-    for (const [key, value] of Object.entries(output)) {
+    for (const [key, value] of Object.entries(counts)) {
       outputList.push({
         name: key,
-        value: value
+        data: [
+          {
+            name: key,
+            value: value
+          }
+        ],
+        showInLegend: false
       });
     }
+    //setSubgenreData([{name: "test", data: [1,2,3]}])
     console.log(outputList)
     setSubgenreData(outputList)
   }
 
   const getTopArtists = async (e) => {
     e.preventDefault();
-    console.log("In top artists")
     const {data} = await axios.get("https://api.spotify.com/v1/me/top/artists", {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
-    console.log(data);
+    //console.log(data);
     setTopArtists(data.items);
     populateSubgenreData(data.items)
   }
@@ -179,7 +171,7 @@ function App() {
         }
 
         {/* {renderTopArtists()} */}
-        {renderArtists()}
+        {/* {renderArtists()} */}
         <HighchartsReact highcharts={Highcharts} options={options} />
         
       </header>
