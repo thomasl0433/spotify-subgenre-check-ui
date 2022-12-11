@@ -4,13 +4,14 @@ import axios from 'axios';
 import Highcharts from 'highcharts/';
 import HighchartsReact from 'highcharts-react-official';
 import HC_more from 'highcharts/highcharts-more' //module
+import Button from 'react-bootstrap/Button';
 HC_more(Highcharts) //init module
 
 
 function App() {
   const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
-  const REDIRECT_URI = "https://spotify-subgenre-thomasl0433.vercel.app"
-  // const REDIRECT_URI = "http://localhost:3000";
+  // const REDIRECT_URI = "https://spotify-subgenre-thomasl0433.vercel.app"
+  const REDIRECT_URI = "http://localhost:3000";
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
   const RESPONSE_TYPE = "token";
 
@@ -146,38 +147,63 @@ function App() {
       </div>
     })
   }
+  
+  const loginString = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=user-top-read`
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Spotify React</h1>
-        {!token ? 
-        <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=user-top-read`}>Login to Spotify</a> 
+    <div className="container mx-auto rounded-xl p-8 flex items-center flex-col">
+      <div className="">
+        <h1 className="text-3xl font-bold text-center">Spotify Subgenre Visualization</h1>   
+      </div>
+      {!token ? 
+        <a 
+        href={loginString}
+        className="bg-spotify-green rounded-sm p-2 text-gray-100 m-8">Login to Spotify</a>
           : <button onClick={logout}>Logout</button>
-        }
+      }
 
-        {/* {token ?
+      { token ? 
+        <form onSubmit={getTopArtists}>
+          <button type={"submit"}>Get top artists</button>
+        </form>
+        : ""
+      }
+
+        
+      {token ? 
+        <HighchartsReact highcharts={Highcharts} options={options} />
+        : ""
+      }
+        
+    </div>
+  );
+
+ 
+}
+
+export default App;
+
+/*
+
+{/* {token ?
           <form onSubmit={searchArtists}>
             <input type="text" onChange={e => setSearchKey(e.target.value)}/>
             <button type={"submit"}>Search</button>
           </form>
           : <h2>Please login</h2>
-        } */}
+        } *}
 
-        { token ? 
-            <form onSubmit={getTopArtists}>
-              <button type={"submit"}>Get top artists</button>
-            </form>
-          : <h2>Please login to use spotify features</h2>
-        }
+{/* {renderTopArtists()} /}
+{/* {renderArtists()} /}
 
-        {/* {renderTopArtists()} */}
-        {/* {renderArtists()} */}
-        <HighchartsReact highcharts={Highcharts} options={options} />
-        
-      </header>
-    </div>
-  );
-}
-
-export default App;
+ // return (
+  //   <div className="container mx-auto bg-gray-200 rounded-xl shadow border p-8 m-10">
+  //     <p className="text-3xl text-gray-700 font-bold mb-5">
+  //       Welcome!
+  //     </p>
+  //     <p className="text-gray-500 text-lg">
+  //       React and tailwindcss in action!
+  //     </p>
+  //   </div>
+  // )
+*/
