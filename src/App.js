@@ -54,6 +54,9 @@ function App() {
     let token = window.localStorage.getItem("token");
     // console.log(window.location)
     // console.log(window.localStorage)
+    if (token) {
+      token = ""
+    }
 
     if (!token && hash) {
       token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1];
