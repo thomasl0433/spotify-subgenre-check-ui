@@ -10,9 +10,7 @@ HC_more(Highcharts) //init module
 
 function App() {
   const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
-  // const REDIRECT_URI = "https://spotify-subgenre-thomasl0433.vercel.app"
-  //const REDIRECT_URI = "http://localhost:3000";
-  const REDIRECT_URI = process.env.ENV === "DEV" ? "http://localhost:3000" : "https://spotify-subgenre-thomasl0433.vercel.app";
+  const REDIRECT_URI = process.env.REACT_APP_ENV === "DEV" ? "http://localhost:3000" : "https://spotify-subgenre-thomasl0433.vercel.app";
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
   const RESPONSE_TYPE = "token";
 
@@ -172,6 +170,7 @@ function App() {
     <div className="container mx-auto rounded-xl p-8 flex items-center flex-col">
       <div className="">
         <h1 className="text-3xl font-bold text-center">Spotify Subgenre Visualization</h1>   
+        <p>{process.env.ENV}</p>
       </div>
       {!token ? 
         <a 
@@ -191,7 +190,7 @@ function App() {
 
         
       {token ? 
-        <HighchartsReact highcharts={Highcharts} options={options} />
+        <HighchartsReact className="shadow rounded-xl" highcharts={Highcharts} options={options} />
         : ""
       }
         
