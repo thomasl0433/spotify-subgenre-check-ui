@@ -16,6 +16,7 @@ function App() {
 
   const [token, setToken] = useState("");
   const [searchKey, setSearchKey] = useState("");
+  const [expired, setExpired] = useState("");
   const [artists, setArtists] = useState([]);
   const [topArtists, setTopArtists] = useState([]);
   const [subgenreData, setSubgenreData] = useState([]);
@@ -51,6 +52,8 @@ function App() {
   useEffect(() => {
     const hash = window.location.hash;
     let token = window.localStorage.getItem("token");
+    // console.log(window.location)
+    // console.log(window.localStorage)
 
     if (!token && hash) {
       token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1];
@@ -59,6 +62,8 @@ function App() {
       window.localStorage.setItem("token", token);
     }
     setToken(token);
+    getTopArtists(token)
+    // setExpired("expired")
   }, [])
 
   const logout = () => {
@@ -122,17 +127,22 @@ function App() {
       });
     }
     //setSubgenreData([{name: "test", data: [1,2,3]}])
-    console.log(outputList)
+    //console.log(outputList)
     setSubgenreData(outputList)
   }
 
-  const getTopArtists = async (e) => {
-    e.preventDefault();
+  const getTopArtists = async (input_token) => {
     const {data} = await axios.get("https://api.spotify.com/v1/me/top/artists", {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${input_token}`
       }
     }).catch(function(error) {
+      if (error.response.status === 401) {
+        // expired token
+        console.log("token has expired, logout and back in")
+        setToken("")
+        setExpired("expired")
+      }
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
@@ -172,25 +182,37 @@ function App() {
         <h1 className="text-3xl font-bold text-center">Spotify Subgenre Visualization</h1>   
         <p>{process.env.ENV}</p>
       </div>
-      {!token ? 
+
+      { expired ?
+        <div className="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <strong className="font-bold">Session expired: </strong>
+        <span className="block sm:inline">Please logout and try again.</span>
+      </div> : ""
+      }
+
+      {!token && !expired ? 
         <a 
         href={loginString}
-        className="bg-spotify-green rounded-sm p-2 text-gray-100 m-8">Login to Spotify</a>
-          : <button onClick={logout}>Logout</button>
+        className="bg-spotify-green rounded-sm p-2 text-gray-100 m-8"
+        >Login to Spotify</a>
+          : <button className="bg-spotify-green rounded-sm p-2 text-gray-100 m-8" onClick={logout}>Logout</button>
       }
 
       <HeaderInfo />
 
-      { token ? 
+      {/* { token && !expired ? 
         <form onSubmit={getTopArtists}>
           <button type={"submit"}>Get top artists</button>
         </form>
         : ""
-      }
+      } */}
 
         
-      {token ? 
-        <HighchartsReact className="shadow rounded-xl" highcharts={Highcharts} options={options} />
+      {token && !expired ? 
+        <div className="shadow border-4 border-gray-100 rounded-xl">
+          <HighchartsReact className="" highcharts={Highcharts} options={options} />
+        </div>
+        
         : ""
       }
         
