@@ -4,7 +4,7 @@ import axios from 'axios';
 import Highcharts from 'highcharts/';
 import HighchartsReact from 'highcharts-react-official';
 import HC_more from 'highcharts/highcharts-more' //module
-import Button from 'react-bootstrap/Button';
+import HeaderInfo from './components/headerInfo'
 HC_more(Highcharts) //init module
 
 
@@ -80,7 +80,6 @@ function App() {
       }
     })
     
-
     //console.log(data);
     setArtists(data.artists.items);
   }
@@ -135,7 +134,25 @@ function App() {
       headers: {
         Authorization: `Bearer ${token}`
       }
+    }).catch(function(error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
     })
+
     //console.log(data);
     setTopArtists(data.items);
     populateSubgenreData(data.items)
@@ -162,6 +179,8 @@ function App() {
         className="bg-spotify-green rounded-sm p-2 text-gray-100 m-8">Login to Spotify</a>
           : <button onClick={logout}>Logout</button>
       }
+
+      <HeaderInfo />
 
       { token ? 
         <form onSubmit={getTopArtists}>
