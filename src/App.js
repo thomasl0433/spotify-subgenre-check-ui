@@ -15,11 +15,11 @@ function App() {
   const RESPONSE_TYPE = "token";
 
   const [token, setToken] = useState("");
-  // const [searchKey, setSearchKey] = useState("");
   const [expired, setExpired] = useState("");
-  // const [artists, setArtists] = useState([]);
   const [topArtists, setTopArtists] = useState([]);
   const [subgenreData, setSubgenreData] = useState([]);
+  // const [searchKey, setSearchKey] = useState("");
+  // const [artists, setArtists] = useState([]);
 
   const options = {
     chart: {
@@ -63,36 +63,17 @@ function App() {
     // setExpired("expired")
   }, [])
 
+  useEffect(() => {
+    if (token.length > 100) {
+      getTopArtists(token)
+    }
+  }, [token])
+
   const logout = () => {
     setToken("");
     setExpired(null)
     window.localStorage.removeItem("token");
   }
-
-  // const searchArtists = async (e) => {
-  //   e.preventDefault(); 
-  //   const {data} = await axios.get("https://api.spotify.com/v1/search", {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`
-  //     },
-  //     params: {
-  //       q: searchKey,
-  //       type: "artist"
-  //     }
-  //   })
-    
-  //   //console.log(data);
-  //   setArtists(data.artists.items);
-  // }
-
-  // const renderArtists = () => {
-  //   return artists.map(artist => {
-  //     return <div key={artist.id}>
-  //       {artist.images.length ? <img width={"100%"} src={artist.images[0].url} alt=""/> : <div>No image</div>}
-  //       {artist.name}
-  //     </div>
-  //   })
-  // }
 
   const populateSubgenreData = (dataList) => {
     const genreList = [];
@@ -164,13 +145,8 @@ function App() {
     populateSubgenreData(data.items)
   }
 
-  const renderTopArtists = () => {
-    return topArtists.map(artist => {
-      return <div key={artist.id}>
-        {artist.name}
-      </div>
-    })
-  }
+
+  
   
   const loginString = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=user-top-read`
 
@@ -205,7 +181,6 @@ function App() {
         : ""
       } */}
 
-        
       {token && !expired ? 
         <div className="shadow border-4 border-gray-100 rounded-xl">
           <HighchartsReact className="" highcharts={Highcharts} options={options} />
@@ -246,3 +221,36 @@ export default App;
   //   </div>
   // )
 */
+
+// const searchArtists = async (e) => {
+  //   e.preventDefault(); 
+  //   const {data} = await axios.get("https://api.spotify.com/v1/search", {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`
+  //     },
+  //     params: {
+  //       q: searchKey,
+  //       type: "artist"
+  //     }
+  //   })
+    
+  //   //console.log(data);
+  //   setArtists(data.artists.items);
+  // }
+
+  // const renderArtists = () => {
+  //   return artists.map(artist => {
+  //     return <div key={artist.id}>
+  //       {artist.images.length ? <img width={"100%"} src={artist.images[0].url} alt=""/> : <div>No image</div>}
+  //       {artist.name}
+  //     </div>
+  //   })
+  // }
+
+  // const renderTopArtists = () => {
+  //   return topArtists.map(artist => {
+  //     return <div key={artist.id}>
+  //       {artist.name}
+  //     </div>
+  //   })
+  // }
