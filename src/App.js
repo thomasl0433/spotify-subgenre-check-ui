@@ -64,7 +64,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (token.length > 100) {
+    if (token != null && token.length > 100) {
       getTopArtists(token)
     }
   }, [token])
