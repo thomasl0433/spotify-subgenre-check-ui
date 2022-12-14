@@ -19,6 +19,7 @@ function App() {
   const [topArtists, setTopArtists] = useState([]);
   const [subgenreData, setSubgenreData] = useState([]);
   const [notAllowed, setNotAllowed] = useState("");
+  const [largeGenres, setLargeGenres] = useState([]);
   // const [searchKey, setSearchKey] = useState("");
   // const [artists, setArtists] = useState([]);
 
@@ -87,20 +88,27 @@ function App() {
     const genreList = [];
     const counts = {};
     const outputList = [];
+    //console.log(dataList)
 
     // iterate through list of top artists
     for (let i = 0; i < dataList.length; i++) {
       // iterate through each genre per artist
       for (let j = 0; j < dataList[i].genres.length; j++) {
+        // genreList is a comprehensive list of all genres, includes duplicates
         genreList.push(dataList[i].genres[j]);
       }
     }
 
+    // create counts obj that stores a key:val for each genre, i.e. {rap: 10, rock:3}
     for (const genre of genreList) {
       counts[genre] = counts[genre] ? counts[genre] + 1 : 1;
     }
 
-    //console.log(output)
+    console.log(counts)
+
+    // append {genre: count} object with below struture to outputList to feed into HighChart js
+    // final result example = [{name: rap, data: [{name: rap, value: 4}], showInLegend: false}, 
+    //                         {name: jazz, data: [{name: jazz, value: 8}], showInLegend: false}]
     for (const [key, value] of Object.entries(counts)) {
       outputList.push({
         name: key,
@@ -113,8 +121,7 @@ function App() {
         showInLegend: false
       });
     }
-    //setSubgenreData([{name: "test", data: [1,2,3]}])
-    console.log(outputList)
+    //console.log(outputList)
     setSubgenreData(outputList)
   }
 
@@ -129,7 +136,7 @@ function App() {
         console.log("token has expired, logout and back in")
         setToken("")
         setExpired("expired")
-      } else if (error.resposne.status === 403) {
+      } else if (error.response.status === 403) {
         // forbidden access
         console.log("forbidden access, user needs to be whitelisted")
         setNotAllowed("not_on_list")
