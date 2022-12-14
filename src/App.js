@@ -71,7 +71,7 @@ function App() {
     setToken(token);
 
     // uncomment these out to test permission error messages
-    setNotAllowed("not_allowed")
+    // setNotAllowed("not_allowed")
     // setExpired("expired")
   }, [])
 
