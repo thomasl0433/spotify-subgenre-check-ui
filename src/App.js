@@ -45,7 +45,12 @@ function App() {
         maxSize: '170%',
         dataLabels: {
           enabled: true,
-          format: '{point.name}'
+          format: '{point.name}',
+          filter: {
+            property: 'y',
+            operator: '>',
+            value: 1
+          }
         }
       }
     }
