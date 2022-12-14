@@ -187,7 +187,9 @@ function App() {
     <div className="mx-auto rounded-xl p-8 flex items-center flex-col">
       <div className="">
         <h1 className="text-3xl font-bold text-center">Spotify Subgenre Visualization</h1>   
-        <p>{process.env.ENV}</p>
+        <p className="text-center italic">
+          by <a href="https://www.linkedin.com/in/thomas-levine-tal" target="_blank" className="italic text-link-color" rel="noreferrer">Thomas</a>
+        </p>
       </div>
 
       { expired ?
