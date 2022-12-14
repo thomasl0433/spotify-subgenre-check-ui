@@ -71,7 +71,7 @@ function App() {
     setToken(token);
 
     // uncomment these out to test permission error messages
-    // setNotAllowed("not_allowed")
+    setNotAllowed("not_allowed")
     // setExpired("expired")
   }, [])
 
@@ -109,8 +109,6 @@ function App() {
     for (const genre of genreList) {
       counts[genre] = counts[genre] ? counts[genre] + 1 : 1;
     }
-
-    console.log(counts)
 
     // append {genre: count} object with below struture to outputList to feed into HighChart js
     // final result example = [{name: rap, data: [{name: rap, value: 4}], showInLegend: false}, 
@@ -214,11 +212,10 @@ function App() {
           : <button className="bg-spotify-green rounded-full p-3 text-gray-100 mt-8 mb-8" onClick={logout}>Logout</button>
       }
 
-      {token && !expired ? 
+      {token && !expired && !notAllowed ? 
         <div id="highchart-wrapper" className="shadow border-4 border-gray-100 rounded-xl overflow-hidden mb-4">
           <HighchartsReact className="" highcharts={Highcharts} options={options} />
         </div>
-        
         : ""
       }
 
