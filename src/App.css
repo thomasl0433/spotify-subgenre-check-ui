@@ -1,0 +1,13 @@
+#highchart-wrapper {
+    white-space: nowrap;      /*keep text on one line */
+    overflow: hidden;         /*prevent text from being shown outside the border */
+    text-overflow: ellipsis;  /*cut off text with an ellipsis*/
+    /* border: solid red 2px; */
+    
+}
+
+@media not all and (min-width: 640px) {
+    #highchart-wrapper {
+        width: 100%;
+    }
+}

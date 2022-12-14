@@ -171,7 +171,7 @@ function App() {
       }
 
       {token && !expired ? 
-        <div className="shadow border-4 border-gray-100 rounded-xl overflow-hidden">
+        <div id="highchart-wrapper" className="shadow border-4 border-gray-100 rounded-xl overflow-hidden mb-4">
           <HighchartsReact className="" highcharts={Highcharts} options={options} />
         </div>
         
