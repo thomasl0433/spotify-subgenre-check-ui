@@ -5,6 +5,7 @@ import Highcharts from 'highcharts/';
 import HighchartsReact from 'highcharts-react-official';
 import HC_more from 'highcharts/highcharts-more' //module
 import HeaderInfo from './components/headerInfo'
+import Summary from './components/summary'
 HC_more(Highcharts) //init module
 
 
@@ -19,7 +20,7 @@ function App() {
   const [topArtists, setTopArtists] = useState([]);
   const [subgenreData, setSubgenreData] = useState([]);
   const [notAllowed, setNotAllowed] = useState("");
-  const [largeGenres, setLargeGenres] = useState([]);
+  const [username, setUserName] = useState("");
   // const [searchKey, setSearchKey] = useState("");
   // const [artists, setArtists] = useState([]);
 
@@ -29,7 +30,7 @@ function App() {
       height: '100%'
     },
     title: {
-      text: 'Top Listening Subgenres'
+      text: `Top Listening Genres for ${username}`
     },
     tooltip: {
       useHTML: true,
@@ -130,6 +131,17 @@ function App() {
     setSubgenreData(outputList)
   }
 
+  const getUsername = async () => {
+    const {data} = await axios.get("https://api.spotify.com/v1/me", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    setUserName(data.display_name)
+    //console.log(data.display_name)
+  }
+
   const getTopArtists = async (input_token) => {
     const {data} = await axios.get("https://api.spotify.com/v1/me/top/artists", {
       headers: {
@@ -164,6 +176,7 @@ function App() {
       console.log(error.config);
     })
 
+    getUsername()
     setTopArtists(data.items);
     populateSubgenreData(data.items)
   }
@@ -206,6 +219,8 @@ function App() {
         
         : ""
       }
+
+      <Summary />
 
       <HeaderInfo />
         
