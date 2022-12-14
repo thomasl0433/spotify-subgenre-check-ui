@@ -167,9 +167,9 @@ function App() {
       {!token && !expired ? 
         <a 
         href={loginString}
-        className="bg-spotify-green rounded-sm p-2 text-gray-100 m-8"
+        className="bg-spotify-green rounded-full p-3 text-gray-100 mt-8"
         >Login to Spotify</a>
-          : <button className="bg-spotify-green rounded-sm p-2 text-gray-100 m-8" onClick={logout}>Logout</button>
+          : <button className="bg-spotify-green rounded-full p-3 text-gray-100 mt-8 mb-8" onClick={logout}>Logout</button>
       }
 
       {/* { token && !expired ? 
