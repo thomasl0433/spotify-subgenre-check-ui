@@ -172,8 +172,6 @@ function App() {
           : <button className="bg-spotify-green rounded-sm p-2 text-gray-100 m-8" onClick={logout}>Logout</button>
       }
 
-      <HeaderInfo />
-
       {/* { token && !expired ? 
         <form onSubmit={getTopArtists}>
           <button type={"submit"}>Get top artists</button>
@@ -188,6 +186,8 @@ function App() {
         
         : ""
       }
+
+      <HeaderInfo />
         
     </div>
   );
