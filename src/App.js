@@ -18,6 +18,7 @@ function App() {
   const [expired, setExpired] = useState("");
   const [topArtists, setTopArtists] = useState([]);
   const [subgenreData, setSubgenreData] = useState([]);
+  const [notAllowed, setNotAllowed] = useState("");
   // const [searchKey, setSearchKey] = useState("");
   // const [artists, setArtists] = useState([]);
 
@@ -61,12 +62,16 @@ function App() {
       window.localStorage.setItem("token", token);
     }
     setToken(token);
+
+    // uncomment these out to test permission error messages
+    // setNotAllowed("not_allowed")
     // setExpired("expired")
   }, [])
 
   useEffect(() => {
     // prevent api calls before logging in 
     if (token != null && token.length > 100) {
+      // load HighChart once the token is modified and contains the relevant info
       getTopArtists(token)
     }
   }, [token])
@@ -74,6 +79,7 @@ function App() {
   const logout = () => {
     setToken("");
     setExpired(null)
+    setNotAllowed(null)
     window.localStorage.removeItem("token");
   }
 
@@ -123,6 +129,10 @@ function App() {
         console.log("token has expired, logout and back in")
         setToken("")
         setExpired("expired")
+      } else if (error.resposne.status === 403) {
+        // forbidden access
+        console.log("forbidden access, user needs to be whitelisted")
+        setNotAllowed("not_on_list")
       }
       if (error.response) {
         // The request was made and the server responded with a status code
@@ -159,6 +169,13 @@ function App() {
         <div className="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
         <strong className="font-bold">Session expired: </strong>
         <span className="block sm:inline">Please logout and try again.</span>
+      </div> : ""
+      }
+
+      { notAllowed ?
+        <div className="mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <strong className="font-bold">Account not approved: </strong>
+        <span className="block sm:inline">Please reach out to Thomas to be added.</span>
       </div> : ""
       }
 
