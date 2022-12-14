@@ -15,9 +15,9 @@ function App() {
   const RESPONSE_TYPE = "token";
 
   const [token, setToken] = useState("");
-  const [searchKey, setSearchKey] = useState("");
+  // const [searchKey, setSearchKey] = useState("");
   const [expired, setExpired] = useState("");
-  const [artists, setArtists] = useState([]);
+  // const [artists, setArtists] = useState([]);
   const [topArtists, setTopArtists] = useState([]);
   const [subgenreData, setSubgenreData] = useState([]);
 
@@ -52,11 +52,6 @@ function App() {
   useEffect(() => {
     const hash = window.location.hash;
     let token = window.localStorage.getItem("token");
-    // console.log(window.location)
-    // console.log(window.localStorage)
-    if (token) {
-      token = ""
-    }
 
     if (!token && hash) {
       token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1];
@@ -65,39 +60,39 @@ function App() {
       window.localStorage.setItem("token", token);
     }
     setToken(token);
-    getTopArtists(token)
     // setExpired("expired")
   }, [])
 
   const logout = () => {
     setToken("");
+    setExpired(null)
     window.localStorage.removeItem("token");
   }
 
-  const searchArtists = async (e) => {
-    e.preventDefault(); 
-    const {data} = await axios.get("https://api.spotify.com/v1/search", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      params: {
-        q: searchKey,
-        type: "artist"
-      }
-    })
+  // const searchArtists = async (e) => {
+  //   e.preventDefault(); 
+  //   const {data} = await axios.get("https://api.spotify.com/v1/search", {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`
+  //     },
+  //     params: {
+  //       q: searchKey,
+  //       type: "artist"
+  //     }
+  //   })
     
-    //console.log(data);
-    setArtists(data.artists.items);
-  }
+  //   //console.log(data);
+  //   setArtists(data.artists.items);
+  // }
 
-  const renderArtists = () => {
-    return artists.map(artist => {
-      return <div key={artist.id}>
-        {artist.images.length ? <img width={"100%"} src={artist.images[0].url} alt=""/> : <div>No image</div>}
-        {artist.name}
-      </div>
-    })
-  }
+  // const renderArtists = () => {
+  //   return artists.map(artist => {
+  //     return <div key={artist.id}>
+  //       {artist.images.length ? <img width={"100%"} src={artist.images[0].url} alt=""/> : <div>No image</div>}
+  //       {artist.name}
+  //     </div>
+  //   })
+  // }
 
   const populateSubgenreData = (dataList) => {
     const genreList = [];
