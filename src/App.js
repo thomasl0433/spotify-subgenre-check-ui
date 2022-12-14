@@ -50,6 +50,7 @@ function App() {
   };
 
   useEffect(() => {
+    // cache token
     const hash = window.location.hash;
     let token = window.localStorage.getItem("token");
 
@@ -64,6 +65,7 @@ function App() {
   }, [])
 
   useEffect(() => {
+    // prevent api calls before logging in 
     if (token != null && token.length > 100) {
       getTopArtists(token)
     }
@@ -106,7 +108,7 @@ function App() {
       });
     }
     //setSubgenreData([{name: "test", data: [1,2,3]}])
-    //console.log(outputList)
+    console.log(outputList)
     setSubgenreData(outputList)
   }
 
@@ -140,18 +142,14 @@ function App() {
       console.log(error.config);
     })
 
-    //console.log(data);
     setTopArtists(data.items);
     populateSubgenreData(data.items)
   }
 
-
-  
-  
   const loginString = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=user-top-read`
 
   return (
-    <div className="container mx-auto rounded-xl p-8 flex items-center flex-col">
+    <div className="mx-auto rounded-xl p-8 flex items-center flex-col">
       <div className="">
         <h1 className="text-3xl font-bold text-center">Spotify Subgenre Visualization</h1>   
         <p>{process.env.ENV}</p>
@@ -172,15 +170,8 @@ function App() {
           : <button className="bg-spotify-green rounded-full p-3 text-gray-100 mt-8 mb-8" onClick={logout}>Logout</button>
       }
 
-      {/* { token && !expired ? 
-        <form onSubmit={getTopArtists}>
-          <button type={"submit"}>Get top artists</button>
-        </form>
-        : ""
-      } */}
-
       {token && !expired ? 
-        <div className="shadow border-4 border-gray-100 rounded-xl">
+        <div className="shadow border-4 border-gray-100 rounded-xl overflow-hidden">
           <HighchartsReact className="" highcharts={Highcharts} options={options} />
         </div>
         
