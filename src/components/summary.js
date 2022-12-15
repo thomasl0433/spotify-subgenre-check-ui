@@ -14,7 +14,7 @@ export default function Summary(props) {
     }
 
     const listItems = props.sortedGenres.map((item, idx) => {
-        const arg = item[0].replace(' ', '')
+        const arg = item[0].replaceAll(' ', '').replaceAll(/\W/g, '')
         const id = makeid(10);
         const url = `https://everynoise.com/engenremap-${arg}.html`
         let fontSize = ""
