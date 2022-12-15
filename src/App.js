@@ -221,14 +221,18 @@ function App() {
           : <button className="bg-spotify-green rounded-full p-3 text-gray-100 mt-8 mb-8" onClick={logout}>Logout</button>
       }
 
-      {token && !expired && !notAllowed ? 
+      { token && !expired && !notAllowed ? 
         <div id="highchart-wrapper" className="shadow-xl border-4 border-gray-100 rounded-xl overflow-hidden mb-4">
           <HighchartsReact className="" highcharts={Highcharts} options={options} />
         </div>
         : ""
       }
 
-      <Summary sortedGenres={sortedGenres} />
+      { token && !expired && !notAllowed ? 
+        <Summary sortedGenres={sortedGenres} />
+        : ""
+      }
+      
 
       <HeaderInfo />
         
