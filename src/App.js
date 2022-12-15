@@ -21,6 +21,7 @@ function App() {
   const [subgenreData, setSubgenreData] = useState([]);
   const [notAllowed, setNotAllowed] = useState("");
   const [username, setUserName] = useState("");
+  const [sortedGenres, setSortedGenres] = useState([]);
   // const [searchKey, setSearchKey] = useState("");
   // const [artists, setArtists] = useState([]);
 
@@ -43,7 +44,7 @@ function App() {
     plotOptions: {
       packedbubble: {
         minSize: '30%',
-        maxSize: '170%',
+        maxSize: '180%',
         dataLabels: {
           enabled: true,
           format: '{point.name}',
@@ -110,10 +111,13 @@ function App() {
       counts[genre] = counts[genre] ? counts[genre] + 1 : 1;
     }
 
+    let sortedGenres = [];
+
     // append {genre: count} object with below struture to outputList to feed into HighChart js
     // final result example = [{name: rap, data: [{name: rap, value: 4}], showInLegend: false}, 
     //                         {name: jazz, data: [{name: jazz, value: 8}], showInLegend: false}]
     for (const [key, value] of Object.entries(counts)) {
+      sortedGenres.push([key, value])
       outputList.push({
         name: key,
         data: [
@@ -125,7 +129,12 @@ function App() {
         showInLegend: false
       });
     }
-    //console.log(outputList)
+    
+    sortedGenres.sort(function(a, b) {
+      return b[1] - a[1];
+    })
+    
+    setSortedGenres(sortedGenres)
     setSubgenreData(outputList)
   }
 
@@ -213,13 +222,13 @@ function App() {
       }
 
       {token && !expired && !notAllowed ? 
-        <div id="highchart-wrapper" className="shadow border-4 border-gray-100 rounded-xl overflow-hidden mb-4">
+        <div id="highchart-wrapper" className="shadow-xl border-4 border-gray-100 rounded-xl overflow-hidden mb-4">
           <HighchartsReact className="" highcharts={Highcharts} options={options} />
         </div>
         : ""
       }
 
-      <Summary />
+      <Summary sortedGenres={sortedGenres} />
 
       <HeaderInfo />
         
